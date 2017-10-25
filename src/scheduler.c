@@ -4,7 +4,7 @@
  * Created: 25.10.2017 9:11:22
  *  Author: e1401162
  */
-#include scheduler.h
+#include "scheduler.h"
 struct _sched_task_t {
 	uint8_t hour;
 	uint8_t minutes;

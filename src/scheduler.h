@@ -17,7 +17,7 @@ extern "C" {
 	#include <avr/io.h>
 	#include <stddef.h>
 	#include <avr/interrupt.h>
-
+	#include <stdint.h>
 	
 
 	#define SCHEDULER_PRESCALER 5
