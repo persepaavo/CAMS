@@ -6,17 +6,17 @@
  */
 #include "scheduler.h"
 struct _sched_task_t {
-	uint8_t hour;
 	uint8_t minutes;
+	uint8_t seconds;
 	void (*task)();
 };
 
-volatile uint8_t _sched_hours;
 volatile uint8_t _sched_minutes;
+volatile uint8_t _sched_seconds;
 volatile uint8_t _sched_seconds;
 volatile struct _sched_task_t _sched_tasks[SCHEDULER_MAX_TASKS];
 
-void scheduler_init(uint8_t hour, uint8_t minutes) {
+void scheduler_init(uint8_t minutes, uint8_t seconds) {
 	int16_t index;
 	
 	TIMSK1 &= ~(_BV(OCIE1A));
@@ -24,9 +24,9 @@ void scheduler_init(uint8_t hour, uint8_t minutes) {
 	for(index=0; index<SCHEDULER_MAX_TASKS; index++)
 	_sched_tasks[index].task = NULL;
 	
-	_sched_hours = hour;
 	_sched_minutes = minutes;
-	_sched_seconds = 0;
+	_sched_seconds = seconds;
+	_sched_hours = 0;
 	
 	OCR1A = SCHEDULER_TICKS;
 	TCCR1A = 0;
@@ -35,15 +35,15 @@ void scheduler_init(uint8_t hour, uint8_t minutes) {
 	TIMSK1 |= _BV(OCIE1A);
 }
 
-void scheduler_set(uint8_t hour, uint8_t minutes) {
+void scheduler_set(uint8_t minutes, uint8_t seconds) {
 	TIMSK1 &= ~(_BV(OCIE1A));
-	_sched_hours = hour;
 	_sched_minutes = minutes;
-	_sched_seconds = 0;
+	_sched_seconds = seconds;
+	_sched_hours = 0;
 	TIMSK1 |= _BV(OCIE1A);
 }
 
-int16_t task_add(uint8_t hour, uint8_t minutes, void (*f)()) {
+int16_t task_add(uint8_t minutes, uint8_t seconds, void (*f)()) {
 	int16_t index;
 	volatile struct _sched_task_t *task;
 	
@@ -51,8 +51,8 @@ int16_t task_add(uint8_t hour, uint8_t minutes, void (*f)()) {
 		task = &_sched_tasks[index];
 		if (task->task == NULL) {
 			TIMSK1 &= ~(_BV(OCIE1A));
-			task->hour = hour;
 			task->minutes = minutes;
+			task->seconds = seconds;
 			task->task = f;
 			TIMSK1 |= _BV(OCIE1A);
 			return index;
@@ -65,10 +65,10 @@ void task_del(int16_t index) {
 	_sched_tasks[index].task = NULL;
 }
 
-void task_set(int16_t index, uint8_t hour, uint8_t minutes) {
+void task_set(int16_t index, uint8_t minutes, uint8_t seconds) {
 	TIMSK1 &= ~(_BV(OCIE1A));
-	_sched_tasks[index].hour = hour;
 	_sched_tasks[index].minutes = minutes;
+	_sched_tasks[index].seconds = seconds;
 	TIMSK1 |= _BV(OCIE1A);
 }
 
@@ -82,13 +82,13 @@ ISR(TIMER1_COMPA_vect) {
 		_sched_minutes++;
 		if (_sched_minutes == 60) {
 			_sched_minutes = 0;
-			_sched_hours++;
-			if (_sched_hours == 24)
+			_sched_hours+;
+			if (_sched_hours == 1)
 			_sched_hours = 0;
 		}
 		for(index=0; index<SCHEDULER_MAX_TASKS; index++) {
 			task = &_sched_tasks[index];
-			if ((task->task != NULL) && (task->hour == _sched_hours) && (task->minutes == _sched_minutes))
+			if ((task->task != NULL) && (task->minutes == _sched_minutes) && (task->seconds == _sched_seconds))
 			task->task();
 		}
 	}

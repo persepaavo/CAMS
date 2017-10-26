@@ -27,12 +27,12 @@ extern "C" {
 	#define SCHEDULER_MAX_TASKS 5
 
 
-	void scheduler_init(uint8_t hour, uint8_t minutes);
-	void scheduler_set(uint8_t hour, uint8_t minutes);
+	void scheduler_init(uint8_t minutes, uint8_t seconds);
+	void scheduler_set(uint8_t minutes, uint8_t seconds);
 
-	int16_t task_add(uint8_t hour, uint8_t minutes, void (*f)());
+	int16_t task_add(uint8_t minutes, uint8_t seconds, void (*f)());
 	void task_del(int16_t index);
-	void task_set(int16_t index, uint8_t hour, uint8_t minutes);
+	void task_set(int16_t index, uint8_t minutes, uint8_t seconds);
 
 	#ifdef __cplusplus
 }
