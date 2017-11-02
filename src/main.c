@@ -1,40 +1,44 @@
-/**
- * \file
- *
- * \brief Empty user application template
- *	hi
- */
+#include <avr/io.h>
+#include "scheduler.h"
 
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * Bare minimum empty user application template
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# "Insert system clock initialization code here" comment
- * -# Minimal main function that starts with a call to board_init()
- * -# "Insert application code here" comment
- *
- */
-
-/*
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#include <asf.h>
-
-int main (void)
-{
-	/* Insert system clock initialization code here (sysclk_init()). */
-
-	board_init();
-
-	/* Insert application code here, after the board has been initialized. */
+void led_on() {
+	PORTB = 0xff;
 }
+
+void led_off() {
+	PORTB = 0;
+}
+
+int main() {
+	// set PORTB as output
+	DDRB = 0xff;
+	PORTB = 0;
+	
+	// In this example you will see that PORTB turns ON after 1 minute
+	// and will turn OFF after 2 minutes, repeating it every day.
+	
+	// You can synchronize your device by setting scheduler init time
+	// to 10:00AM (for example) and then hitting your device's reset at 10:00AM.
+	//
+	// By wiring some 7-segment displays and some push buttons, you can set
+	// the time using `scheduler_set` as a normal watch.
+	
+	// initialize scheduler time as 10:30
+	scheduler_init(0, 1);
+	
+	// turn led on at 10:31
+	task_add(1, 1, led_on);
+	
+	// turn led off at 10:32
+	task_add(1, 30, led_off);
+	
+	// enable global interrupts
+	sei();
+	
+	while(1) {
+		// your code goes here
+	}
+	
+	return 0;
+}
+
