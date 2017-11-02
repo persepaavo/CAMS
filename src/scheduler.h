@@ -28,11 +28,11 @@ extern "C" {
 
 
 	void scheduler_init(uint8_t minutes, uint8_t seconds);
-	void scheduler_set(uint8_t minutes, uint8_t seconds);
 
 	int16_t task_add(uint8_t minutes, uint8_t seconds, void (*f)());
-	void task_del(int16_t index);
-	void task_set(int16_t index, uint8_t minutes, uint8_t seconds);
+
+	void task_order_shuffle();
+	
 
 	#ifdef __cplusplus
 }
