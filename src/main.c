@@ -1,40 +1,40 @@
-/**
- * \file
- * hi
- * \brief Empty user application template
- *
- */
-
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * Bare minimum empty user application template
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# "Insert system clock initialization code here" comment
- * -# Minimal main function that starts with a call to board_init()
- * -# "Insert application code here" comment
- *
- */
-
 /*
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#include <asf.h>
+ * SHT71_Temp_Humi_sensor.c
+ *
+ * Created: 26.10.2017 17.51.09
+ *  Author: henri
+ */ 
 
-int main (void)
-{
-	/* Insert system clock initialization code here (sysclk_init()). */
+// Example of user space C program to read a humidity and temperature
+// sensor Sensirion SHT71 (http://www.acmesystems.it/?id=89)
 
-	board_init();
+#include "SHT71_Temp_Humi_sensor.h"
+#include "uart.h"
 
-	/* Insert application code here, after the board has been initialized. */
+int main(void){
+
+	char humidity;
+	int temperature;
+	char tempH;
+	char tempL;
+
+	UART1_int(9600,8,1,0);
+	UART1_Put_String_blocking("Aloitetaan\n\r"); // Sarjaliikenteen testauslähetys
+
+	
+	humidity = ReadHumidity();
+
+	temperature = ReadTemperature();
+	tempH = (char)(temperature/10);
+	tempL = (char)(temperature-(tempH*10));
+
+	UART1_Put_String_blocking("Temperature: ");
+	UART1_Put_Char_blocking(tempH);
+	UART1_Put_String_blocking(".");
+	UART1_Put_Char_blocking(tempL);
+
+	UART1_Put_String_blocking("Humidity: ");
+	UART1_Put_Char_blocking(humidity);
+	UART1_Put_String_blocking("%/n/r");
+	
 }
