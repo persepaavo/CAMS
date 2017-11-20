@@ -35,32 +35,36 @@
 void task1(void)
 {
 	PORTB ^= 0x01;
-	//_delay_ms(1000);
+
 }
 
 void task2(void)
+{	
+	PORTB ^= 0x02;
+	
+}
+void task3(void)
 {
-	PORTB ^= 0x05;
+	PORTB ^= 0x04;
 }
 
 int main (void)
 {
 	PORTB =0xff;
-	/* Insert  system clock initialization code here (sysclk_init()). */
 
 	
 	DDRB ^= 0xff;
 
 	board_init();
-	task_add(0,1,task1);
-	task_add(0,1,task2);
+	task_add(0,2,task1);
+	task_add(0,4,task2);
+	task_add(0,8,task3);
 	scheduler_init();
 	sei();
 	while(1) 
 	{
 
 	}
-	/* Insert application code here, after the board has been initialized. */
 
 	return 0;
 }

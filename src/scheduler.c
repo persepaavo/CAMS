@@ -10,9 +10,9 @@ struct _sched_task_t {
 	uint8_t minutes;
 	uint8_t seconds;
 	void (*task)();
-	//short unsigned int state; // !!!
+
 };
-//int task_order = {0,1,2};
+int b = 0;
 
 volatile uint8_t _sched_minutes;
 volatile uint8_t _sched_seconds;
@@ -74,6 +74,16 @@ ISR(TIMER1_COMPA_vect) {
 		for(index=0; index<SCHEDULER_MAX_TASKS; index++) {
 			task = &_sched_tasks[index];
 			if ((task->task != NULL)  && ( _sched_seconds % task->seconds == 0))
-			task->task();
+				//if (b == 0)
+				//{
+			//		b = 1;
+				{
+					//TIMSK &= ~(_BV(OCIE1A));
+					task->task();
+					//TIMSK |= _BV(OCIE1A);
+				}
+			//	}
+			//b = 0;
+					
 		}
 }
