@@ -29,22 +29,23 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include <util/delay.h>
 #include "scheduler.h"
 
 void task1(void)
 {
-	PORTB = ~(PORTB << 1);
-	delay(8);
+	PORTB ^= 0x01;
+	//_delay_ms(1000);
 }
 
 void task2(void)
 {
-	PORTB = 0x00;
+	PORTB ^= 0x05;
 }
 
 int main (void)
 {
-	PORTB =0x00;
+	PORTB =0xff;
 	/* Insert  system clock initialization code here (sysclk_init()). */
 
 	
@@ -52,7 +53,7 @@ int main (void)
 
 	board_init();
 	task_add(0,1,task1);
-	task_add(0,9,task2);
+	task_add(0,1,task2);
 	scheduler_init();
 	sei();
 	while(1) 
