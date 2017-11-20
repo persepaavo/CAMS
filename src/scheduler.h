@@ -27,11 +27,11 @@ extern "C" {
 	#define SCHEDULER_MAX_TASKS 5
 
 
-	void scheduler_init(uint8_t minutes, uint8_t seconds);
+	void scheduler_init(void);
 
 	int16_t task_add(uint8_t minutes, uint8_t seconds, void (*f)());
 
-	void task_order_shuffle();
+
 	
 
 	#ifdef __cplusplus
