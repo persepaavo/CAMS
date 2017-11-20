@@ -23,12 +23,6 @@ volatile struct _sched_task_t _sched_tasks[SCHEDULER_MAX_TASKS];
 void scheduler_init(void) {
 	//int16_t index;
 	
-
-	//TIMSK &= (1 << OCIE1A);
-
-	//for(index=0; index<SCHEDULER_MAX_TASKS; index++)
-	//_sched_tasks[index].task = NULL;
-	
 	_sched_minutes = 0;
 	_sched_seconds = 0;
 
@@ -40,7 +34,7 @@ void scheduler_init(void) {
 	TCCR1B |= (1 << WGM12)|(1 << CS12);
 	TIMSK |= (1 << OCIE1A);
 	
-	//TCCR1B |= ;
+
 
 }
 
@@ -71,22 +65,15 @@ ISR(TIMER1_COMPA_vect) {
 	if (_sched_seconds == 60) {
 		_sched_seconds = 0;
 		
-		//task = &_sched_tasks[0];
-		//if ( _sched_seconds  == 4)
-		//task->task();
-		
-		/*for(index=0; index<SCHEDULER_MAX_TASKS; index++) {
-			task = &_sched_tasks[index];
-			if ((task->task != NULL)  && ( _sched_seconds % task->seconds == 0))
-			task->task();
-		}*/
+
 		}
-		task = &_sched_tasks[0];
+	
+
+
+			
 		for(index=0; index<SCHEDULER_MAX_TASKS; index++) {
 			task = &_sched_tasks[index];
 			if ((task->task != NULL)  && ( _sched_seconds % task->seconds == 0))
 			task->task();
 		}
-	
-	
 }
