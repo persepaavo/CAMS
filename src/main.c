@@ -30,12 +30,35 @@
  */
 #include <asf.h>
 #include "scheduler.h"
+
+void task1(void)
+{
+	PORTB = ~(PORTB << 1);
+	delay(8);
+}
+
+void task2(void)
+{
+	PORTB = 0x00;
+}
+
 int main (void)
 {
+	PORTB =0x00;
 	/* Insert  system clock initialization code here (sysclk_init()). */
 
-	board_init();
+	
+	DDRB ^= 0xff;
 
+	board_init();
+	task_add(0,1,task1);
+	task_add(0,9,task2);
+	scheduler_init();
+	sei();
+	while(1) 
+	{
+
+	}
 	/* Insert application code here, after the board has been initialized. */
 
 	return 0;
