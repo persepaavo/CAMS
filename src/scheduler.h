@@ -29,7 +29,7 @@ extern "C" {
 
 	void scheduler_init(void);
 
-	int16_t task_add(uint8_t minutes, uint8_t seconds, void (*f)());
+	int16_t task_add(uint8_t seconds, void (*f)(), int* stack);
 
 
 	
