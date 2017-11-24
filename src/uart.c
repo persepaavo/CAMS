@@ -5,6 +5,7 @@
  *  Author: e1401187 & e1401162
  */ 
 #include "uart.h"
+#include <avr/io.h>
 int UART0_int(long baud, int size, int stop, int parity){
 	UBRR0H = 0x00; // write high register first
 	UBRR0L = ((XTAL/16)/baud)-1;
