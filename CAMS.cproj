@@ -221,6 +221,18 @@
     <Compile Include="src\scheduler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\SHT11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SHT11.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
