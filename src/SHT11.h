@@ -1,6 +1,9 @@
+#define F_CPU 8000000L
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/io.h>
+
+
 
 #define	DataPin				PINA4
 #define ClockPin			PINA5
@@ -21,11 +24,14 @@
 
 #define _nop_				_delay_us(2)
 
-#define STATUS_REG_W		0x06	//0000  0110
+#define WriteToRegister		0x06	//0000  0110
 #define STATUS_REG_R		0x07	//0000  0111
 #define MeasureTemp			0x03	//0000  0011
 #define MeasureHumi			0x05	//0000  0101
 #define RESET				0x1e	//0001  1110
+
+// if this define is used when writing to register
+#define ResolutionBit		0x01	//0000  0001 Forces humidity resolution to 8 bits and temp resolution to 12 bits 
 
 
 //----------------------------------------------------------------------------------
@@ -39,6 +45,18 @@ void send_start(void);
 char send_byte(unsigned char val);
 
 //----------------------------------------------------------------------------------
-// reads a byte form the Sensibus and gives an acknowledge in case of "ack=1"
+// reads a byte form the Sensor and gives an acknowledge in case of "ack=1"
 //----------------------------------------------------------------------------------
 char read_byte(unsigned char ack);
+
+//----------------------------------------------------------------------------------
+// write to register
+//----------------------------------------------------------------------------------
+char write_register(unsigned char val);
+
+//----------------------------------------------------------------------------------
+// Changes measuring resolution
+// 1 = 8/12 bit Humi/Temp
+// 0 = 12/14 bit Humi/Temp (Default!)
+//----------------------------------------------------------------------------------
+char change_resolution(unsigned char val);

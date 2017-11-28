@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <util/delay.h>
 
+
 void main(){
 	
 	
@@ -14,15 +15,14 @@ void main(){
 //	printf("Testi\n\r");
 	_delay_ms(2000);
 	while (1){
+		change_resolution(1);
 
-//		send_start();
+		send_start();
 		t = send_byte(MeasureHumi);
-		DataOut;
-		DataLow;
-		_delay_us(5);
+		
+		_delay_ms(80);
 		c = read_byte(t);
-		DataOut;
-		DataLow;
+		
 		printf("Send_byte: %d\n\rRead_byte: %d\n\r", c,t);
 		_delay_ms(2000);
 	}

@@ -45,7 +45,7 @@ void send_start(void){
 //----------------------------------------------------------------------------------
 char send_byte(unsigned char val){
 	
-	send_start();
+//	send_start();
 	
 	DataOut;
 	DataLow;
@@ -63,6 +63,7 @@ char send_byte(unsigned char val){
 		_nop_;
 		_nop_;
 		_nop_;
+		
 		ClockHigh;
 		_nop_;
 		_nop_;
@@ -83,21 +84,40 @@ char send_byte(unsigned char val){
 	_nop_;
 	_nop_;
 	_nop_;
-	
-	DataOut;
-	DataLow;
+	_nop_;
 
 	ClockLow;
+//	DataOut;
+//	DataLow;
+
 
 	return error;               //error=1 in case of no acknowledge
 }
 
 //----------------------------------------------------------------------------------
-// reads a byte form the Sensibus and gives an acknowledge in case of "ack=1"
+// reads a byte form the Sensor and gives an acknowledge in case of "ack=1"
 //----------------------------------------------------------------------------------
 char read_byte(unsigned char ack){
 		unsigned char i, val = 0;
-		DataIn;                   //release DATA-line
+//		DataIn;                   //release DATA-line
+
+		
+				
+		ClockHigh;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+		
+		ClockLow;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+
+/*
 		for (i = 0x80; i > 0; i /= 2)       //shift bit for masking
 		{
 			ClockHigh;                //clk for SENSI-BUS
@@ -117,7 +137,6 @@ char read_byte(unsigned char ack){
 			DataLow;
 			DataIn;
 		}
-
 		ClockHigh;                    //clk #9 for ack
 		_nop_;
 		_nop_;
@@ -127,5 +146,31 @@ char read_byte(unsigned char ack){
 		_nop_;
 		_nop_;
 		_nop_;
+*/
 		return val;
+}
+
+//----------------------------------------------------------------------------------
+// write to register
+//----------------------------------------------------------------------------------
+char write_register(unsigned char val){
+	send_start();
+	send_byte(WriteToRegister);
+	send_byte(val);
+}
+
+//----------------------------------------------------------------------------------
+// Changes measuring resolution
+// 1 = 8/12 bit Humi/Temp
+// 0 = 12/14 bit Humi/Temp (Default!)
+//----------------------------------------------------------------------------------
+char change_resolution(unsigned char val){
+	unsigned char reso;
+	if(val == 1){
+		reso = 0x01;
+	}
+	else{
+		reso = 0x00;
+	}
+	write_register(reso);
 }
