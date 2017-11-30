@@ -41,7 +41,7 @@ void send_start(void){
 }
 
 //----------------------------------------------------------------------------------
-// Writes a byte and (checks the acknowledge)
+// Writes a byte (and return 0 as acknowledge, else 1)
 //----------------------------------------------------------------------------------
 char send_byte(unsigned char val){
 	
@@ -95,14 +95,16 @@ char send_byte(unsigned char val){
 }
 
 //----------------------------------------------------------------------------------
-// reads a byte form the Sensor and gives an acknowledge in case of "ack=1"
+// reads a byte form the Sensor
+// ack = 1 output ACK to sensor
+// ack = 0 no ACK to sensor
 //----------------------------------------------------------------------------------
 char read_byte(unsigned char ack){
 		unsigned char i, val = 0;
-//		DataIn;                   //release DATA-line
+		DataIn;                   //release DATA-line
 
 		
-				
+	/*				
 		ClockHigh;
 		_nop_;
 		_nop_;
@@ -116,8 +118,8 @@ char read_byte(unsigned char ack){
 		_nop_;
 		_nop_;
 		_nop_;
-
-/*
+	*/
+//	/*
 		for (i = 0x80; i > 0; i /= 2)       //shift bit for masking
 		{
 			ClockHigh;                //clk for SENSI-BUS
@@ -135,8 +137,13 @@ char read_byte(unsigned char ack){
 		if(ack == 1){					//in case of "ack==1" pull down DATA-Line
 			DataOut;
 			DataLow;
-			DataIn;
 		}
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
+		_nop_;
 		ClockHigh;                    //clk #9 for ack
 		_nop_;
 		_nop_;
@@ -146,14 +153,17 @@ char read_byte(unsigned char ack){
 		_nop_;
 		_nop_;
 		_nop_;
-*/
+		_nop_;
+		_nop_;
+		
+//	*/
 		return val;
 }
 
 //----------------------------------------------------------------------------------
 // write to register
 //----------------------------------------------------------------------------------
-char write_register(unsigned char val){
+void write_register(unsigned char val){
 	send_start();
 	send_byte(WriteToRegister);
 	send_byte(val);
@@ -164,7 +174,7 @@ char write_register(unsigned char val){
 // 1 = 8/12 bit Humi/Temp
 // 0 = 12/14 bit Humi/Temp (Default!)
 //----------------------------------------------------------------------------------
-char change_resolution(unsigned char val){
+void change_resolution(unsigned char val){
 	unsigned char reso;
 	if(val == 1){
 		reso = 0x01;
@@ -173,4 +183,44 @@ char change_resolution(unsigned char val){
 		reso = 0x00;
 	}
 	write_register(reso);
+}
+
+//----------------------------------------------------------------------------------
+// Returns temperature in Celsius from sensor
+// ex. 15.6C is returned as 156 and so forth
+//		int16_t temp_c;
+//		temp_c = get_temp();
+//
+//		c = (signed char)(temp_c % 10);
+//		if(c < 0){
+//			c=c * -1;
+//		}
+//		t = (signed char)(temp_c / 10);
+//
+//		printf("Temp: %d.%dC\n\r", t,c);
+//----------------------------------------------------------------------------------
+int16_t get_temp(){
+	unsigned char t;
+	int16_t temp_raw;
+	float d1, d2, temp_c;
+	d1 = 40.1;
+	d2 = 0.04;
+	
+	send_start();
+	t = send_byte(MeasureTemp);
+	
+	for(t=0; t<80; t++){		// Wait for measurement to be ready (timeout at 80ms)
+		_delay_ms(1);
+		if((DataRead) == 0){
+			break;
+		}
+	}
+		
+	temp_raw = ((unsigned char)read_byte(1))<<8;
+	temp_raw = temp_raw + (unsigned char)read_byte(0);
+	
+	temp_c = temp_raw * d2 - d1;
+	temp_raw = (int16_t)(temp_c * 10);
+	
+	return temp_raw;	
 }

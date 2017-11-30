@@ -40,23 +40,32 @@
 void send_start(void);
 
 //----------------------------------------------------------------------------------
-// Writes a byte and checks the acknowledge
+// Writes a byte (and return 0 as acknowledge, else 1)
 //----------------------------------------------------------------------------------
 char send_byte(unsigned char val);
 
 //----------------------------------------------------------------------------------
-// reads a byte form the Sensor and gives an acknowledge in case of "ack=1"
+// reads a byte form the Sensor
+// ack = 1 output ACK to sensor
+// ack = 0 no ACK to sensor
 //----------------------------------------------------------------------------------
 char read_byte(unsigned char ack);
 
 //----------------------------------------------------------------------------------
 // write to register
 //----------------------------------------------------------------------------------
-char write_register(unsigned char val);
+void write_register(unsigned char val);
 
 //----------------------------------------------------------------------------------
 // Changes measuring resolution
 // 1 = 8/12 bit Humi/Temp
 // 0 = 12/14 bit Humi/Temp (Default!)
 //----------------------------------------------------------------------------------
-char change_resolution(unsigned char val);
+void change_resolution(unsigned char val);
+
+//----------------------------------------------------------------------------------
+// Returns temperature in Celsius from sensor
+// ex. 15.6C is returned as 156 and so forth
+// ex. code for main inside SHT11.c
+//----------------------------------------------------------------------------------
+int16_t get_temp(); 
