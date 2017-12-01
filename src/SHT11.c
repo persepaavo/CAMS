@@ -204,23 +204,54 @@ int16_t get_temp(){
 	int16_t temp_raw;
 	float d1, d2, temp_c;
 	d1 = 40.1;
-	d2 = 0.04;
+	d2 = 0.01;
 	
 	send_start();
 	t = send_byte(MeasureTemp);
 	
-	for(t=0; t<80; t++){		// Wait for measurement to be ready (timeout at 80ms)
+	for(t=0; t<320; t++){		// Wait for measurement to be ready (timeout at 320ms)
 		_delay_ms(1);
 		if((DataRead) == 0){
 			break;
 		}
 	}
-		
+	
 	temp_raw = ((unsigned char)read_byte(1))<<8;
 	temp_raw = temp_raw + (unsigned char)read_byte(0);
 	
 	temp_c = temp_raw * d2 - d1;
 	temp_raw = (int16_t)(temp_c * 10);
 	
-	return temp_raw;	
+	return temp_raw;
+}
+
+int16_t get_humi(signed char c, signed char t){
+	unsigned char i;
+	int16_t humi_raw;
+	float c1, c2, c3, rhlin, temp_c, t1 ,t2;
+	c1 = 2.0468;
+	c2 = 0.0367;
+	c3 = -0.0000015955;
+	t1 = 0.01;
+	t2 = 0.00008;
+	
+	temp_c = (float)c + (float)(t*0.1);
+	
+	send_start();
+	i = send_byte(MeasureHumi);
+	
+	for(i=0; i<80; i++){		// Wait for measurement to be ready (timeout at 80ms)
+		_delay_ms(1);
+		if((DataRead) == 0){
+			break;
+		}
+	}
+	
+	humi_raw = ((unsigned char)read_byte(1))<<8;
+	humi_raw = humi_raw + (unsigned char)read_byte(0);
+	
+	rhlin = c1+c2*humi_raw+c3*(humi_raw*humi_raw);
+	
+	humi_raw = (float)((temp_c-25)*(t1+t2*humi_raw)+rhlin)*10;	
+	return humi_raw;
 }

@@ -69,3 +69,5 @@ void change_resolution(unsigned char val);
 // ex. code for main inside SHT11.c
 //----------------------------------------------------------------------------------
 int16_t get_temp(); 
+
+int16_t get_humi(signed char c, signed char t);
