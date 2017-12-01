@@ -18,11 +18,7 @@ extern "C" {
 	#include <stddef.h>
 	#include <avr/interrupt.h>
 	#include <stdint.h>
-	
 
-	#define SCHEDULER_PRESCALER 5
-
-	#define SCHEDULER_TICKS 15625U
 
 	#define SCHEDULER_MAX_TASKS 5
 
