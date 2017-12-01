@@ -52,14 +52,8 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: GPIO - General purpose Input/Output
-#include <gpio.h>
-
 // From module: Generic board support
 #include <board.h>
-
-// From module: IOPORT - General purpose I/O service
-#include <ioport.h>
 
 // From module: Interrupt management - megaAVR and tinyAVR implementation
 #include <interrupt.h>
