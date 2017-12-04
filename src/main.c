@@ -1,40 +1,38 @@
-/**
- * \file
- * hi
- * \brief Empty user application template
- *
- */
+#include "uart.h"
+#define F_CPU 8000000L
+#include <stdio.h>
+#include <util/delay.h>
 
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * Bare minimum empty user application template
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# "Insert system clock initialization code here" comment
- * -# Minimal main function that starts with a call to board_init()
- * -# "Insert application code here" comment
- *
- */
 
-/*
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#include <asf.h>
+int valoportti;
 
-int main (void)
+ISR(INT5_vect)
 {
-	/* Insert system clock initialization code here (sysclk_init()). */
+	valoportti++;
+	printf("Autoja: %d\r\n", valoportti);
+	_delay_ms(300);
+}
 
-	board_init();
+void main(){
+	
+	UART1_int(9600,8,1,0);
+	EIMSK |= (1 << INT5);
+	EICRB |= (1 << ISC50);
+	EICRB |= (1 << ISC51);
 
-	/* Insert application code here, after the board has been initialized. */
+	fdevopen(UART1_Put_Char_blocking,NULL);
+	sei();
+
+	DDRA |= (1<<PINA4);
+	
+	PORTA |= (1<<PINA4);
+	PORTA &= ~(1<<PINA4);
+	_delay_ms(2000);
+//		printf("Testi\n\r");
+	while (1){		
+		PORTA |= (1<<PINA4);
+		_delay_us(167);
+		PORTA &= ~(1<<PINA4);
+		_delay_us(167);
+	}
 }
