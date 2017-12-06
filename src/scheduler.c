@@ -38,6 +38,12 @@ void scheduler_init(void) {
 }
 
 
+void task_timer(struct _sched_task_t *task)
+{
+	
+}
+
+
 int16_t task_add(uint8_t seconds, void (*f)(), int *stack) {
 	int16_t index;
 	volatile struct _sched_task_t *task;
@@ -57,7 +63,8 @@ int16_t task_add(uint8_t seconds, void (*f)(), int *stack) {
 	return -1;
 }
 
-ISR(TIMER1_COMPA_vect) {
+ISR(TIMER1_COMPA_vect)
+{
 	int16_t index;
 	volatile struct _sched_task_t *task;
 	_sched_mseconds++;
@@ -99,6 +106,13 @@ ISR(TIMER1_COMPA_vect) {
 	}
 			
 }
+
+ISR(TIMER0_COMPA_vect)
+{
+
+}
+
+
 void dispatch(volatile struct _sched_task_t *task)
 {
 	// the call to this function should push the return address into the stack.

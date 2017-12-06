@@ -27,7 +27,7 @@ extern "C" {
 
 	int16_t task_add(uint8_t seconds, void (*f)(), int* stack);
 	void dispatch(volatile struct _sched_task_t *task);
-
+	void task_timer(struct _sched_task_t *task);
 
 	
 
