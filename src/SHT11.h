@@ -5,11 +5,11 @@
 
 
 
-#define	DataPin				PINA4
-#define ClockPin			PINA5
+#define	DataPin				PINA0
+#define ClockPin			PINA1
 #define ControlDirection	DDRA
 #define ControlPort			PORTA
-#define DataRead			PINA & 0b00010000					//ignore all but 4th pin
+#define DataRead			PINA & 0b00000001					//ignore all but 1st pin
 
 
 #define ClockOut			ControlDirection |= (1<<ClockPin)	//Set Clock pin as output
