@@ -94,9 +94,15 @@ void main(){
 
 	int16_t humi_lin;
 	humi_lin = get_humi(c, t);
-	
-	m = (signed char)(humi_lin % 10);
-	k = (signed char)(humi_lin / 10);
+		
+	if(humi_lin > 990){
+		m=0;
+		k=100;
+	}
+	else{
+		m = (signed char)(humi_lin % 10);
+		k = (signed char)(humi_lin / 10);	
+	}
 				
 	printf("  Humidity: %d.%d%%\n\r", k,m);
 
