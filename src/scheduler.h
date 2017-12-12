@@ -23,7 +23,7 @@ extern "C" {
 	This macro defines a maximum amount of tasks performed by AVR microcontroller
 	**************************/
 
-	#define SCHEDULER_MAX_TASKS 5
+	#define SCHEDULER_MAX_TASKS 1
 
 	/*************************
 	Task structure:

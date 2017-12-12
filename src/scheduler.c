@@ -116,15 +116,19 @@ ISR(TIMER1_COMPA_vect)
 				{
 					// if a timer mode is a one shot mode with one hour period
 					if ((task->period_min == 61) && (task->period_sec == 61))
+					{
 						if ( (task->start_minutes == _sched_minutes) && (task->start_seconds == _sched_seconds) )
 							task->task();
+					}
 					else if
 					// if a task has a certain period less than hour	
 						( ((_sched_minutes % task->period_min == 0) && (_sched_seconds % task->period_sec == 0) ) ||
 							( (task->period_min == 0) && (_sched_seconds % task->period_sec == 0) ) ||
 							( (task->period_sec == 0) && (_sched_minutes % task->period_min == 0) ))
 					{
+							TIMSK &= (1 << OCIE1A);	
 							task->task();
+							TIMSK |= (1 << OCIE1A);	
 					}
 				}
 			}
