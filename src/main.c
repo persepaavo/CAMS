@@ -37,20 +37,25 @@ void main(){
 	//////////////////////////////////////////////
 	/////// IR                             ///////
 	//////////////////////////////////////////////
-
-	for(irCounter=0;irCounter<200;irCounter++){ // demo wait 2400 for 2 mins
+	
+	vehicle = 0;
+	for(irCounter=0;irCounter<100;irCounter++){ // demo wait 2400 for 2 mins
 		
 		PORTA |= (1<<PINA4);		// Set PINA4 HIGH
 		_delay_us(100);				// IR LED pulse width
 		PORTA &= ~(1<<PINA4);		// Set PINA4 LOW
 		
-		_delay_us(200);				// wait 200us for IR sensor to drive PINA5 down, if not blocked
+		_delay_us(150);				// wait 200us for IR sensor to drive PINA5 down, if not blocked
 		if(PINA & 0b00100000){		// If PINA5 is high there is something blocking the IR emitter
-			blocked = 1;
+			blocked ++;
 		}
 		else{						// Else IR light reaches sensor
-			if(blocked == 1){		// If IR was blocked earlier a vehicle has passed
-				vehicle++;
+			if(blocked >= 2){		// If IR was blocked earlier a vehicle has passed
+				blocked = 0;
+				vehicle++; 
+			}
+			else{
+				
 				blocked = 0;
 			}
 		}
@@ -108,7 +113,8 @@ void main(){
 
 
 	printf("Vehicles: %d\r\n", vehicle);
-	_delay_ms(2000);
+	
+	_delay_ms(1000);
 		
 
 
